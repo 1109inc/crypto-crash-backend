@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crypto Crash WebSocket Test</title>
+</head>
+<body>
+  <h1>🧪 WebSocket Client</h1>
+  <p>Status: <span id="status">Connecting...</span></p>
+  <p>Current Multiplier: <span id="multiplier">-</span></p>
+  <p>Round Status: <span id="round-status">Waiting...</span></p>
+  <button id="cashout">Send Cashout</button>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io('http://localhost:3000');
+
+    const statusEl = document.getElementById('status');
+    const multiplierEl = document.getElementById('multiplier');
+    const roundStatusEl = document.getElementById('round-status');
+    const cashoutBtn = document.getElementById('cashout');
+
+    socket.on('connect', () => {
+      statusEl.innerText = '🟢 Connected: ' + socket.id;
+    });
+
+    socket.on('disconnect', () => {
+      statusEl.innerText = '🔴 Disconnected';
+    });
+
+    // Live multiplier update
+    socket.on('multiplier_update', (data) => {
+      multiplierEl.innerText = `${data.multiplier}x`;
+    });
+
+    // New round started
+    socket.on('round_start', (data) => {
+      roundStatusEl.innerText = `🕹️ Round ${data.roundNumber} started (crash at ~${data.crashPoint}x)`;
+      multiplierEl.innerText = `1x`;
+    });
+
+    // Round crashed
+    socket.on('round_crash', (data) => {
+      roundStatusEl.innerText = `💥 Round ${data.roundNumber} crashed at ${data.crashPoint}x`;
+    });
+
+    // Send test cashout event
+    cashoutBtn.addEventListener('click', () => {
+      socket.emit('cashout', { playerId: 'test_user' });
+      alert('Cashout event sent!');
+    });
+  </script>
+</body>
+</html>
