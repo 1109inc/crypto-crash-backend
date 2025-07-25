@@ -1,5 +1,3 @@
-// routes/bet.js
-
 const express = require('express');
 const router = express.Router();
 const Player = require('../models/Player');
@@ -22,6 +20,14 @@ router.post('/', async (req, res) => {
     const player = await Player.findOne({ username });
     if (!player) return res.status(404).json({ error: 'Player not found' });
 
+    const roundNumber = getCurrentRoundNumber();
+
+    // ✅ Check for existing active bet
+    const existingBet = await Bet.findOne({ username, roundNumber, cashedOut: false });
+    if (existingBet) {
+      return res.status(400).json({ error: '❌ You already have an active bet this round' });
+    }
+
     const prices = await getCryptoPrices();
     const cryptoPrice = prices[currency];
     const cryptoAmount = usdAmount / cryptoPrice;
@@ -34,9 +40,6 @@ router.post('/', async (req, res) => {
     // Deduct from wallet
     player.wallet[currency] -= cryptoAmount;
     await player.save();
-
-    // ✅ Get correct live round
-    const roundNumber = getCurrentRoundNumber();
 
     // Save bet
     const bet = new Bet({

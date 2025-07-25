@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000"); // change this to your hosted backend later
+const socket = io("http://localhost:3000"); // Change to Render link when deploying
 
 let currentRound = 1;
 let multiplier = 1;
@@ -27,10 +27,15 @@ function placeBet() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, usdAmount, currency })
   })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('response').textContent = JSON.stringify(data);
-  });
+    .then(res => res.json())
+    .then(data => {
+      const resDiv = document.getElementById('response');
+      if (data.message) {
+        resDiv.textContent = `✅ Bet placed: $${usdAmount} in ${currency}`;
+      } else {
+        resDiv.textContent = `❌ ${data.error || 'Failed to place bet'}`;
+      }
+    });
 }
 
 function cashOut() {
@@ -41,8 +46,31 @@ function cashOut() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, roundNumber: currentRound })
   })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('response').textContent = JSON.stringify(data);
-  });
+    .then(res => res.json())
+    .then(data => {
+      const resDiv = document.getElementById('response');
+      if (data.payout) {
+        const { multiplier, usd, crypto } = data.payout;
+        resDiv.textContent = `✅ Cashout at ${multiplier}x — $${usd} / ${crypto} crypto`;
+      } else {
+        resDiv.textContent = `❌ ${data.error || 'Cashout failed'}`;
+      }
+    });
+}
+function fetchWallet() {
+  const walletUser = document.getElementById('walletUser').value;
+
+  fetch(`http://localhost:3000/wallet/${walletUser}`)
+    .then(res => res.json())
+    .then(data => {
+      const display = document.getElementById('walletDisplay');
+      if (data.wallet) {
+        display.textContent =
+          `Username: ${data.username}\n` +
+          `BTC: ${data.wallet.crypto.BTC} ($${data.wallet.usdEquivalent.BTC})\n` +
+          `ETH: ${data.wallet.crypto.ETH} ($${data.wallet.usdEquivalent.ETH})`;
+      } else {
+        display.textContent = `❌ ${data.error || 'User not found'}`;
+      }
+    });
 }

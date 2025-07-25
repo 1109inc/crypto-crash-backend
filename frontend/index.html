@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Crypto Crash</title>
+  <title>Crypto Crash Game</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
   <h1>🚀 Crypto Crash Game</h1>
@@ -13,6 +14,18 @@
     <p id="round">Round: 1</p>
   </div>
 
+  <hr>
+
+  <!-- Wallet Section -->
+  <div>
+    <input id="walletUser" placeholder="Enter username for wallet (e.g., alice)" />
+    <button onclick="fetchWallet()">🔎 Get Wallet</button>
+    <pre id="walletDisplay"></pre>
+  </div>
+
+  <hr>
+
+  <!-- Bet and Cashout -->
   <div>
     <input id="username" placeholder="Username" value="alice" />
     <input id="usd" placeholder="USD Amount" type="number" />
@@ -26,7 +39,6 @@
 
   <p id="response"></p>
 
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
