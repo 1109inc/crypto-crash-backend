@@ -22,7 +22,7 @@ function placeBet() {
   const usdAmount = document.getElementById('usd').value;
   const currency = document.getElementById('currency').value;
 
-  fetch('http://localhost:3000/bet', {
+  fetch('https://crypto-crash-backend.onrender.com/bet', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, usdAmount, currency })
@@ -36,7 +36,7 @@ function placeBet() {
 function cashOut() {
   const username = document.getElementById('username').value;
 
-  fetch('http://localhost:3000/cashout', {
+  fetch('https://crypto-crash-backend.onrender.com/cashout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, roundNumber: currentRound })
