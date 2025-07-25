@@ -1,10 +1,14 @@
+// utils/gameEngine.js
+
 const crypto = require('crypto');
 
 let currentMultiplier = 1.0;
 let crashPoint = 0;
 let roundInProgress = false;
+let interval = null;
 let io = null;
-let currentRoundNumber = 1;
+
+let currentRoundNumber = 1; // ✅ Global round tracker
 
 function generateCrashPoint(seed, roundNumber) {
   const hash = crypto.createHash('sha256').update(seed + roundNumber).digest('hex');
@@ -15,44 +19,40 @@ function generateCrashPoint(seed, roundNumber) {
 
 function startGameEngine(socketIO) {
   io = socketIO;
-  runNextRound();
-}
 
-function runNextRound() {
-  if (roundInProgress) return;
+  setInterval(() => {
+    if (roundInProgress) return;
 
-  roundInProgress = true;
-  currentMultiplier = 1.0;
+    // Start new round
+    roundInProgress = true;
+    currentMultiplier = 1.0;
 
-  const seed = crypto.randomBytes(16).toString('hex');
-  crashPoint = generateCrashPoint(seed, currentRoundNumber);
-  console.log(`🕹️ Round ${currentRoundNumber} started. Crash point: ${crashPoint}`);
+    const seed = crypto.randomBytes(16).toString('hex');
+    crashPoint = generateCrashPoint(seed, currentRoundNumber);
+    console.log(`🕹️ Round ${currentRoundNumber} started. Crash point: ${crashPoint}`);
 
-  io.emit('round_start', { roundNumber: currentRoundNumber, crashPoint });
+    io.emit('round_start', { roundNumber: currentRoundNumber, crashPoint });
 
-  const growthRate = 0.02;
-  const startTime = Date.now();
+    const growthRate = 0.02;
+    const startTime = Date.now();
 
-  function updateMultiplier() {
-    const elapsed = (Date.now() - startTime) / 1000;
-    currentMultiplier = parseFloat((1 + elapsed * growthRate).toFixed(2));
+    interval = setInterval(() => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      currentMultiplier = parseFloat((1 + elapsed * growthRate).toFixed(2));
 
-    if (currentMultiplier >= crashPoint) {
-      roundInProgress = false;
-      io.emit('round_crash', { roundNumber: currentRoundNumber, crashPoint });
-      console.log(`💥 Round ${currentRoundNumber} crashed at ${crashPoint}x`);
-      currentRoundNumber++;
+      if (currentMultiplier >= crashPoint) {
+        clearInterval(interval);
+        roundInProgress = false;
+        io.emit('round_crash', { roundNumber: currentRoundNumber, crashPoint });
+        console.log(`💥 Round ${currentRoundNumber} crashed at ${crashPoint}x`);
+        currentRoundNumber++; // ✅ Increment after crash
+        return;
+      }
 
-      // Wait 2 seconds before starting the next round
-      setTimeout(runNextRound, 2000);
-    } else {
       io.emit('multiplier_update', { multiplier: currentMultiplier });
-      // console.log(`📈 Multiplier update: ${currentMultiplier}x`);
-      setTimeout(updateMultiplier, 100); // Update every 100ms
-    }
-  }
-
-  updateMultiplier();
+      console.log(`📈 Multiplier update: ${currentMultiplier}x`);
+    }, 100); // Update every 100ms
+  }, 10000); // New round every 10s
 }
 
 function getCurrentMultiplier() {
@@ -66,5 +66,5 @@ function getCurrentRoundNumber() {
 module.exports = {
   startGameEngine,
   getCurrentMultiplier,
-  getCurrentRoundNumber
+  getCurrentRoundNumber // ✅ export this
 };
