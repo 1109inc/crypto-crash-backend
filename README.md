@@ -211,7 +211,7 @@ A Postman collection is included in the repo as `postman_collection.json` for te
 
 ## 📌 TODO
 
--
+- Build frontend using React.js and integrate with backend APIs
 
 ## 👨‍💻 Author
 
