@@ -22,6 +22,9 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
+const walletRoutes = require('./routes/wallet');
+app.use('/wallet', walletRoutes);
+
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
