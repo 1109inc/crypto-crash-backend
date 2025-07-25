@@ -25,6 +25,9 @@ app.use(express.json());
 const walletRoutes = require('./routes/wallet');
 app.use('/wallet', walletRoutes);
 
+const betRoutes = require('./routes/bet');
+app.use('/bet', betRoutes);
+
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
