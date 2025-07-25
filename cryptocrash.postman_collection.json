@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "e64e9453-1f44-45c9-a6b2-b74cc8ce6ca4",
+		"name": "cryptocrash",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46056240"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000/bet",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"alice\",\r\n  \"usdAmount\": 10,\r\n  \"currency\": \"BTC\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/bet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"bet"
+					]
+				},
+				"description": "This POST request should be sent at the start of a round (e.g., Round 2), before the crash point.  \nMake sure to update \"roundNumber\" in the body to the current round."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/cashout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"alice\",\r\n  \"roundNumber\": 2\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/cashout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cashout"
+					]
+				},
+				"description": "This POST request should be sent during the round (e.g., Round 2) but **before the multiplier crashes**.  \nMust match the round in which you placed your bet."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/wallet/alice",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/wallet/alice",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"wallet",
+						"alice"
+					]
+				},
+				"description": "Retrieves the crypto wallet details and USD equivalents for the specified user.\n\nRun this after cashout to check the balance\n\nExample: /wallet/alice"
+			},
+			"response": []
+		}
+	]
+}
