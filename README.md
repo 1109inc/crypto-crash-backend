@@ -56,6 +56,8 @@ npm run dev   # uses nodemon
 
 ## 🧪 API Endpoints
 
+> ⚠️ Note: Place bets and cashouts within the same round. Watch server logs or `round_start` events to track the current round.
+
 ### `GET /wallet/:username`
 
 Fetch user's crypto and USD balance.
