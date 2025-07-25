@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crypto Crash</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🚀 Crypto Crash Game</h1>
+
+  <div>
+    <p id="multiplier">📈 Multiplier: 1.00x</p>
+    <p id="round">Round: 1</p>
+  </div>
+
+  <div>
+    <input id="username" placeholder="Username" value="alice" />
+    <input id="usd" placeholder="USD Amount" type="number" />
+    <select id="currency">
+      <option value="BTC">BTC</option>
+      <option value="ETH">ETH</option>
+    </select>
+    <button onclick="placeBet()">Place Bet</button>
+    <button onclick="cashOut()">💸 Cash Out</button>
+  </div>
+
+  <p id="response"></p>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
