@@ -50,7 +50,7 @@ function startGameEngine(socketIO) {
       }
 
       io.emit('multiplier_update', { multiplier: currentMultiplier });
-      console.log(`📈 Multiplier update: ${currentMultiplier}x`);
+      // console.log(`📈 Multiplier update: ${currentMultiplier}x`);
     }, 100); // Update every 100ms
   }, 10000); // New round every 10s
 }
