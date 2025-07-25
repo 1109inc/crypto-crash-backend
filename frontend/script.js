@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000"); // change this to your hosted backend later
+const socket = io("https://crypto-crash-backend.onrender.com");// change this to your hosted backend later
 
 let currentRound = 1;
 let multiplier = 1;
