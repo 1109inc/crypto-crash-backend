@@ -8,6 +8,8 @@ let roundInProgress = false;
 let interval = null;
 let io = null;
 
+let currentRoundNumber = 1; // ✅ Global round tracker
+
 function generateCrashPoint(seed, roundNumber) {
   const hash = crypto.createHash('sha256').update(seed + roundNumber).digest('hex');
   const decimal = parseInt(hash.substring(0, 8), 16) / 0xffffffff;
@@ -17,7 +19,6 @@ function generateCrashPoint(seed, roundNumber) {
 
 function startGameEngine(socketIO) {
   io = socketIO;
-  let roundNumber = 1;
 
   setInterval(() => {
     if (roundInProgress) return;
@@ -27,10 +28,10 @@ function startGameEngine(socketIO) {
     currentMultiplier = 1.0;
 
     const seed = crypto.randomBytes(16).toString('hex');
-    crashPoint = generateCrashPoint(seed, roundNumber);
-    console.log(`🕹️ Round ${roundNumber} started. Crash point: ${crashPoint}`);
+    crashPoint = generateCrashPoint(seed, currentRoundNumber);
+    console.log(`🕹️ Round ${currentRoundNumber} started. Crash point: ${crashPoint}`);
 
-    io.emit('round_start', { roundNumber, crashPoint });
+    io.emit('round_start', { roundNumber: currentRoundNumber, crashPoint });
 
     const growthRate = 0.02;
     const startTime = Date.now();
@@ -42,15 +43,28 @@ function startGameEngine(socketIO) {
       if (currentMultiplier >= crashPoint) {
         clearInterval(interval);
         roundInProgress = false;
-        io.emit('round_crash', { roundNumber, crashPoint });
-        console.log(`💥 Round ${roundNumber} crashed at ${crashPoint}x`);
-        roundNumber++;
+        io.emit('round_crash', { roundNumber: currentRoundNumber, crashPoint });
+        console.log(`💥 Round ${currentRoundNumber} crashed at ${crashPoint}x`);
+        currentRoundNumber++; // ✅ Increment after crash
         return;
       }
 
       io.emit('multiplier_update', { multiplier: currentMultiplier });
+      // console.log(`📈 Multiplier update: ${currentMultiplier}x`);
     }, 100); // Update every 100ms
   }, 10000); // New round every 10s
 }
 
-module.exports = { startGameEngine };
+function getCurrentMultiplier() {
+  return currentMultiplier;
+}
+
+function getCurrentRoundNumber() {
+  return currentRoundNumber;
+}
+
+module.exports = {
+  startGameEngine,
+  getCurrentMultiplier,
+  getCurrentRoundNumber // ✅ export this
+};

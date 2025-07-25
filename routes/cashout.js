@@ -1,16 +1,14 @@
-// routes/cashout.js
-
+const { getCurrentMultiplier } = require('../utils/gameEngine');
 const express = require('express');
 const router = express.Router();
 const Player = require('../models/Player');
 const Bet = require('../models/Bet');
 const { getCryptoPrices } = require('../utils/cryptoPrice');
 
-// Temporary: we'll hardcode current multiplier
-let currentMultiplier = 2.0; // 🔄 Replace later with real-time value from game engine
-
 router.post('/', async (req, res) => {
   const { username, roundNumber } = req.body;
+
+  console.log(`🔍 Checking bet for ${username} in round ${roundNumber}`);
 
   if (!username || !roundNumber) {
     return res.status(400).json({ error: 'Missing username or roundNumber' });
@@ -19,8 +17,12 @@ router.post('/', async (req, res) => {
   try {
     const bet = await Bet.findOne({ username, roundNumber, cashedOut: false });
     if (!bet) {
+      console.log('❌ No bet found in DB with that round and username');
       return res.status(404).json({ error: 'No active bet found for this player and round' });
     }
+
+    const currentMultiplier = getCurrentMultiplier(); // ✅ Moved here
+    console.log(`💰 Using live multiplier: ${currentMultiplier}`);
 
     const payoutCrypto = bet.cryptoAmount * currentMultiplier;
     const prices = await getCryptoPrices();
@@ -50,4 +52,5 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 module.exports = router;

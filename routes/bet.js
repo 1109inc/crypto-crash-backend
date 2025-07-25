@@ -5,9 +5,7 @@ const router = express.Router();
 const Player = require('../models/Player');
 const Bet = require('../models/Bet');
 const { getCryptoPrices } = require('../utils/cryptoPrice');
-
-// TEMPORARY: We'll hardcode roundNumber = 1 for now
-let currentRound = 1;
+const { getCurrentRoundNumber } = require('../utils/gameEngine'); // ✅ Import
 
 router.post('/', async (req, res) => {
   const { username, usdAmount, currency } = req.body;
@@ -37,15 +35,20 @@ router.post('/', async (req, res) => {
     player.wallet[currency] -= cryptoAmount;
     await player.save();
 
+    // ✅ Get correct live round
+    const roundNumber = getCurrentRoundNumber();
+
     // Save bet
     const bet = new Bet({
       username,
       usdAmount,
       cryptoAmount,
       currency,
-      roundNumber: currentRound
+      roundNumber
     });
     await bet.save();
+
+    console.log(`✅ Bet placed for ${username} in round ${roundNumber}`);
 
     res.json({
       message: '✅ Bet placed successfully',
