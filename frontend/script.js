@@ -1,4 +1,4 @@
-const socket = io("https://crypto-crash-backend.onrender.com");// change this to your hosted backend later
+const socket = io("http://localhost:3000"); // change this to your hosted backend later
 
 let currentRound = 1;
 let multiplier = 1;
@@ -22,7 +22,7 @@ function placeBet() {
   const usdAmount = document.getElementById('usd').value;
   const currency = document.getElementById('currency').value;
 
-  fetch('https://crypto-crash-backend.onrender.com/bet', {
+  fetch('http://localhost:3000/bet', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, usdAmount, currency })
@@ -36,7 +36,7 @@ function placeBet() {
 function cashOut() {
   const username = document.getElementById('username').value;
 
-  fetch('https://crypto-crash-backend.onrender.com/cashout', {
+  fetch('http://localhost:3000/cashout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, roundNumber: currentRound })
