@@ -1,6 +1,7 @@
 // utils/gameEngine.js
 
 const crypto = require('crypto');
+const Bet = require('../models/Bet'); // ✅ Import Bet model
 
 let currentMultiplier = 1.0;
 let crashPoint = 0;
@@ -20,8 +21,21 @@ function generateCrashPoint(seed, roundNumber) {
 function startGameEngine(socketIO) {
   io = socketIO;
 
-  setInterval(() => {
+  setInterval(async () => {
     if (roundInProgress) return;
+
+    // ✅ Expire any uncashed bets from previous rounds
+    try {
+      const result = await Bet.updateMany(
+        { cashedOut: false },
+        { $set: { cashedOut: true, cashoutMultiplier: 1.0 } }
+      );
+      if (result.modifiedCount > 0) {
+        console.log(`🧹 Cleared ${result.modifiedCount} uncashed bets from previous round`);
+      }
+    } catch (err) {
+      console.error('❌ Failed to expire old bets:', err.message);
+    }
 
     // Start new round
     roundInProgress = true;
@@ -66,5 +80,5 @@ function getCurrentRoundNumber() {
 module.exports = {
   startGameEngine,
   getCurrentMultiplier,
-  getCurrentRoundNumber // ✅ export this
+  getCurrentRoundNumber
 };
