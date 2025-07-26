@@ -75,7 +75,7 @@ const BASE_URL = "http://localhost:3000";
 
 ## 🥺 Deployment (Live Hosting)
 
-- **Frontend** is deployed on **Netlify**: [Live Game Frontend](https://statuesque-fenglisu-55a0b9.netlify.app/)
+- **Frontend** is deployed on **Netlify**: [Live Game Frontend](https://crypto-crash-af90e0.netlify.app)
 - **Backend** is deployed on **Render**: [Live Backend API](https://crypto-crash-backend.onrender.com)
 
 > Note: If you'd like to test from **Round 1**, you can request a redeployment of the backend.
