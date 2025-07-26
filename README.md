@@ -26,27 +26,27 @@ A real-time backend for a cryptocurrency crash betting game. Built using **Node.
 
 ## 📦 Setup Instructions
 
-1. **Clone the Repo**
+### 1. Clone the Repo
 
 ```bash
 git clone https://github.com/1109inc/crypto-crash-backend.git
 cd crypto-crash-backend
 ```
 
-2. **Install Dependencies**
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-3. **Create `.env` File**
+### 3. Create `.env` File
 
-```
+```env
 PORT=3000
 MONGO_URI=your_mongodb_connection_string
 ```
 
-4. **Run Server**
+### 4. Run Server Locally
 
 ```bash
 npm run dev   # uses nodemon
@@ -54,9 +54,42 @@ npm run dev   # uses nodemon
 
 ---
 
-## 🧪 API Endpoints
+## 🔄 Switching Frontend to Local (For Testing)
 
-> ⚠️ Note: Place bets and cashouts within the same round. Watch server logs or `round_start` events to track the current round.
+If you're testing **locally** instead of using the hosted backend on Render:
+
+1. Start the backend (`npm run dev`)
+2. In the frontend `script.js`, replace all URLs like this:
+
+```js
+// Replace this:
+const socket = io("https://crypto-crash-backend.onrender.com");
+
+// With:
+const socket = io("http://localhost:3000");
+
+// Also update fetch URLs:
+fetch("http://localhost:3000/bet", ...)
+fetch("http://localhost:3000/cashout", ...)
+fetch("http://localhost:3000/wallet/username", ...)
+```
+
+3. Open `index.html` from the frontend folder directly in your browser.
+
+---
+
+## 🥺 Deployment (Live Hosting)
+
+- **Frontend** is deployed on **Netlify**: [Live Game Frontend](https://sparkling-tulumba-e93d3b.netlify.app/)
+- **Backend** is deployed on **Render**: [Live Backend API](https://crypto-crash-backend.onrender.com)
+
+> Note: If you'd like to test from **Round 1**, you can request a redeployment of the backend.
+
+---
+
+## 🦖 API Endpoints
+
+> ⚠️ **Important:** Place bets and cashouts within the same round. Watch server logs or listen to `round_start` events to track the current round.
 
 ### `GET /wallet/:username`
 
@@ -153,20 +186,11 @@ Cash out during the round before crash.
 { "roundNumber": 4, "crashPoint": 2.71 }
 ```
 
-### Client Sends:
-
-- `cashout`
-
-```json
-{ "username": "alice" }
-```
-
 ---
 
-## 🧬 Provably Fair Logic
+## 🧰 Provably Fair Logic
 
-- Crash point is calculated using a SHA256 hash of a random seed and round number.
-- Ensures fairness and reproducibility.
+Crash point is calculated using a SHA256 hash of a random seed and round number. Ensures fairness and reproducibility.
 
 ```js
 function generateCrashPoint(seed, roundNumber) {
@@ -198,25 +222,37 @@ Creates 3 test users:
 
 ---
 
-## 📮 Postman Collection
+## 📬 Postman Collection
 
 A Postman collection is included in the repo as `postman_collection.json` for testing all API endpoints.
 
 ---
 
-## 🌐 Hosting / Deployment
+## 📀 Basic WebSocket Frontend
 
-- Backend runs locally or can be hosted on Render (optional).
-- Frontend should be hosted on **Netlify** (if required).
+A simple HTML frontend is included (see `index.html`) which connects to the backend via WebSocket, displays the live multiplier, and allows users to:
+
+- View wallet
+- Place bets
+- Cash out
+
+This is also deployed via Netlify.
 
 ---
 
 ## 📌 TODO
 
-- Build frontend using React.js and integrate with backend APIs
+- ✅ Build frontend using plain HTML/JS/CSS
+- ✅ Add wallet section
+- ✅ Add WebSocket live updates
+- ✅ Deploy backend on Render
+- ✅ Deploy frontend on Netlify
+- ✅ Provide local setup + testing instructions
 
-## 👨‍💻 Author
+---
 
-Pragat Sharma
+## 👨‍💼 Author
+
+**Pragat Sharma**
 
 ---

@@ -1,4 +1,5 @@
-const socket = io("https://crypto-crash-backend.onrender.com"); // Change to Render link when deploying
+const BASE_URL = "https://crypto-crash-backend.onrender.com";
+const socket = io(BASE_URL); // Change to Render link when deploying
 
 let currentRound = 1;
 let multiplier = 1;
@@ -22,7 +23,7 @@ function placeBet() {
   const usdAmount = document.getElementById('usd').value;
   const currency = document.getElementById('currency').value;
 
-  fetch('https://crypto-crash-backend.onrender.com/bet', {
+  fetch(`${BASE_URL}/bet`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, usdAmount, currency })
@@ -41,7 +42,7 @@ function placeBet() {
 function cashOut() {
   const username = document.getElementById('username').value;
 
-  fetch('https://crypto-crash-backend.onrender.com/cashout', {
+  fetch(`${BASE_URL}/cashout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, roundNumber: currentRound })
@@ -60,7 +61,7 @@ function cashOut() {
 function fetchWallet() {
   const walletUser = document.getElementById('walletUser').value;
 
-  fetch(`https://crypto-crash-backend.onrender.com/wallet/${walletUser}`)
+  fetch(`${BASE_URL}/wallet/${walletUser}`)
     .then(res => res.json())
     .then(data => {
       const display = document.getElementById('walletDisplay');
