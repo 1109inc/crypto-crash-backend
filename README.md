@@ -59,19 +59,14 @@ npm run dev   # uses nodemon
 If you're testing **locally** instead of using the hosted backend on Render:
 
 1. Start the backend (`npm run dev`)
-2. In the frontend `script.js`, replace all URLs like this:
+2. In the frontend `script.js`, replace BASE_URL like this:
 
 ```js
 // Replace this:
-const socket = io("https://crypto-crash-backend.onrender.com");
+const BASE_URL = "https://crypto-crash-backend.onrender.com";
 
 // With:
-const socket = io("http://localhost:3000");
-
-// Also update fetch URLs:
-fetch("http://localhost:3000/bet", ...)
-fetch("http://localhost:3000/cashout", ...)
-fetch("http://localhost:3000/wallet/username", ...)
+const BASE_URL = "http://localhost:3000";
 ```
 
 3. Open `index.html` from the frontend folder directly in your browser.
@@ -80,7 +75,7 @@ fetch("http://localhost:3000/wallet/username", ...)
 
 ## 🥺 Deployment (Live Hosting)
 
-- **Frontend** is deployed on **Netlify**: [Live Game Frontend](https://sparkling-tulumba-e93d3b.netlify.app/)
+- **Frontend** is deployed on **Netlify**: [Live Game Frontend](https://statuesque-puffpuff-00acf4.netlify.app/)
 - **Backend** is deployed on **Render**: [Live Backend API](https://crypto-crash-backend.onrender.com)
 
 > Note: If you'd like to test from **Round 1**, you can request a redeployment of the backend.
@@ -240,14 +235,9 @@ This is also deployed via Netlify.
 
 ---
 
-## 📌 TODO
+## 📌 Future improvements
 
-- ✅ Build frontend using plain HTML/JS/CSS
-- ✅ Add wallet section
-- ✅ Add WebSocket live updates
-- ✅ Deploy backend on Render
-- ✅ Deploy frontend on Netlify
-- ✅ Provide local setup + testing instructions
+- Build UI with React for enhanced experience
 
 ---
 
