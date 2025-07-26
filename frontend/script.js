@@ -75,3 +75,12 @@ function fetchWallet() {
       }
     });
 }
+
+fetch(`${BASE_URL}/round`)
+  .then(res => res.json())
+  .then(data => {
+    if (data.roundNumber) {
+      currentRound = data.roundNumber;
+      document.getElementById('round').textContent = `Round: ${currentRound}`;
+    }
+  });
