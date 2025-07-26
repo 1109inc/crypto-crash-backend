@@ -57,13 +57,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Round route
-const { getCurrentRoundNumber } = require('./utils/gameEngine');
-
-app.get('/round', (req, res) => {
-  res.json({ roundNumber: getCurrentRoundNumber() });
-});
-
 // Start server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
