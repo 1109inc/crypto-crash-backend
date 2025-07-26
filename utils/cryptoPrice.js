@@ -8,8 +8,8 @@ let lastFetchTime = 0;
 async function getCryptoPrices() {
   const now = Date.now();
 
-  // Use cache if within 10 seconds
-  if (cachedPrices && (now - lastFetchTime < 10000)) {
+  // Use cache if within 30 seconds
+  if (cachedPrices && (now - lastFetchTime < 30000)) {
     return cachedPrices;
   }
 
